@@ -2,12 +2,13 @@
 pragma solidity ^0.8.4;
 
 // import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "hardhat/console.sol";
 import '@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol';
 import "./interfaces/IPriceFeed.sol";
 
-contract PriceFeed is IPriceFeed {
+contract PriceFeed is IPriceFeed, Ownable {
 
     using SafeMath for uint112;
     using SafeMath for uint256;
@@ -19,6 +20,12 @@ contract PriceFeed is IPriceFeed {
     uint8 private TEMP_DECIMAL = 15;
 
     constructor(address dexPair, uint8 tokenIndex, uint8 decimal) {
+        _dexPair = dexPair;
+        _tokenIndex = tokenIndex;
+        _decimal = decimal;
+    }
+
+    function setNewPair(address dexPair, uint8 tokenIndex, uint8 decimal) public onlyOwner {
         _dexPair = dexPair;
         _tokenIndex = tokenIndex;
         _decimal = decimal;

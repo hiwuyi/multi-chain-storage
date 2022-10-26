@@ -12,7 +12,7 @@ async function main() {
   const USDC = await ethers.getContractFactory('USDCoin')
   const usdc = await USDC.deploy()
   await usdc.deployed()
-  console.log(`USDCInstance address: ${usdc.address}`)
+  console.log(`USDC address: ${usdc.address}`)
 }
 
 main()

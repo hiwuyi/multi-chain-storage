@@ -120,6 +120,10 @@ module.exports = {
       url: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
       accounts: [process.env.PRIVATE_KEY],
     },
+    nbai: {
+      url: process.env.NBAI_RPC,
+      accounts: [process.env.PRIVATE_KEY],
+    },
   },
   solidity: {
     compilers: [
