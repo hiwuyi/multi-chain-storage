@@ -165,7 +165,8 @@ export default {
         access: ''
       },
       changeTitle: '',
-      payLoad: false
+      payLoad: false,
+      payAddress: '0xf7974B6d44673b8eE6f04d085A164880d47Ce732' // this.$root.PAYMENT_CONTRACT_ADDRESS
     }
   },
   components: { popUps },
@@ -384,13 +385,13 @@ export default {
     },
     async payPlan () {
       that.payLoad = true
-      const getID = await that.$commonFun.web3Init.eth.net.getId()
-      if (that.$root.chain_id !== getID) {
-        const { name } = await that.getUnit(Number(that.$root.chain_id))
-        that.$message.error(that.languageMcs === 'en' ? `Please switch to the network: ${name}` : `请切换到网络：${name}`)
-        that.payLoad = false
-        return false
-      }
+      // const getID = await that.$commonFun.web3Init.eth.net.getId()
+      // if (that.$root.chain_id !== getID) {
+      //   const { name } = await that.getUnit(Number(that.$root.chain_id))
+      //   that.$message.error(that.languageMcs === 'en' ? `Please switch to the network: ${name}` : `请切换到网络：${name}`)
+      //   that.payLoad = false
+      //   return false
+      // }
       let tokenFactory = new that.$web3Init.eth.Contract(linkTokenAbi, that.$root.USDC_ADDRESS)
       let payObject = {
         from: that.metaAddress,
@@ -398,7 +399,7 @@ export default {
       }
       let account = that.$root.pay_account
 
-      tokenFactory.methods.approve(that.$root.PAYMENT_CONTRACT_ADDRESS, account).send(payObject)
+      tokenFactory.methods.approve(that.payAddress, account).send(payObject)
         .then(receipt => {
           console.log('approve receipt:', receipt)
           that.contractSend()
@@ -410,7 +411,7 @@ export default {
     },
     async contractSend () {
       try {
-        let payFactory = new that.$web3Init.eth.Contract(payAbi, that.$root.PAYMENT_CONTRACT_ADDRESS)
+        let payFactory = new that.$web3Init.eth.Contract(payAbi, that.payAddress)
         let estimatedGas = await payFactory.methods
           .pay(1)
           .estimateGas({ from: that.metaAddress })
